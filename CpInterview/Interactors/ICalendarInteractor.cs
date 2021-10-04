@@ -1,8 +1,9 @@
+using System.Collections.Generic;
+
 namespace CpInterview.Interactors
 {
   public interface ICalendarInteractor
   {
-    //IList<CalendarEvent> RetrieveCalendarEvents();
-
+    IList<CalendarEvent> RetrieveEvents();
   }
 }
