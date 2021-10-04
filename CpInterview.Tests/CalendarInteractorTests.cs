@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using CpInterview.Interactors;
 
 namespace CpInterview.Tests
 {
@@ -6,10 +7,10 @@ namespace CpInterview.Tests
   public class CalendarInteractorTests
   {
     [TestMethod]
-    public void CanCreateCalendarInteractor()
+    public void CanMakeCalendarInteractor()
     {
-      var calendarInteractor = new CalendarInteractor();
-
+      ICalendarInteractor calendarInteractor = new CalendarInteractor();
     }
+
   }
 }
