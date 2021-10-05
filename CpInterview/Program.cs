@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CpInterview.ApiAccess;
+using CpInterview.Interactors;
+using System;
 
 namespace CpInterview
 {
@@ -6,7 +8,9 @@ namespace CpInterview
   {
     static void Main(string[] args)
     {
-      Console.WriteLine("Hello World!");
+      var i = new CalendarInteractor(new ApiAccessor());
+      i.RetrieveEvents();
+      Console.WriteLine($"howdy");
     }
   }
 }
