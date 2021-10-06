@@ -1,18 +1,55 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using CpInterview.DataEntities;
 using CpInterview.Interactors;
+using Newtonsoft.Json;
 
 namespace CpInterview.ApiAccess
 {
   public class ApiAccessor : IApiAccessor
   {
     private string token;
-    public IList<CalendarEventEntity> RetrieveCalendarEvents()
+
+    public ApiAccessor()
     {
       CpToken cpToken = CpToken.Instance;
-      var cpToken1 = CpToken.value;
-      var cpToken2 = CpToken.value;
-      return new List<CalendarEventEntity>();
+      this.token = CpToken.value;
+    }
+    public IList<CalendarEventEntity> RetrieveCalendarEvents()
+    {
+      var s = RetrieveEvents().Result;
+      var d = JsonConvert.DeserializeObject<CalendarEventEntityJson>(s);
+      return d.items;
+    }
+
+    private async Task<string> RetrieveEvents()
+    {
+      using (var httpClient = new HttpClient())
+      {
+        var defaultRequestHeaders = httpClient.DefaultRequestHeaders;
+
+        //make sure we are passing right media type
+        if (defaultRequestHeaders.Accept == null
+          || !defaultRequestHeaders.Accept.Any(m => m.MediaType == "application/json"))
+        {
+          httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        //add token to request headers
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.token);
+
+        HttpResponseMessage response = await httpClient.GetAsync("https://interview.cpdv.ninja/5122899e-8cd5-4b63-bd10-2ac6b7d08f93/api/Events");
+        return await response.Content.ReadAsStringAsync();
+      }
+    }
+
+    private class CalendarEventEntityJson
+    {
+      public int total { get; set; }
+      public IList<CalendarEventEntity> items { get; set; }
     }
   }
 

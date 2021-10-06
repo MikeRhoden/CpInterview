@@ -9,8 +9,9 @@ namespace CpInterview
     static void Main(string[] args)
     {
       var i = new CalendarInteractor(new ApiAccessor());
-      i.RetrieveEvents();
-      Console.WriteLine($"howdy");
+      var e = i.RetrieveEvents();
+      foreach (var ev in e)
+        Console.WriteLine($"{ev.Title} - {ev.Description} - {ev.StartDate} - {ev.EndDate}");
     }
   }
 }
