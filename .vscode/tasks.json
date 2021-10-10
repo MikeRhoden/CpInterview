@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/CpInterview/CpInterview.csproj",
+        "${workspaceFolder}/CpInterview.Console/CpInterview.Console.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],

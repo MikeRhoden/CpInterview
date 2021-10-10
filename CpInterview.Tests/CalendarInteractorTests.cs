@@ -1,5 +1,5 @@
 using CpInterview.DataEntities;
-using CpInterview.Interactors;
+using CpInterview.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +13,10 @@ namespace CpInterview.Tests
     public void CanRetrieveEvents()
     {
       IApiAccessor apiAccessor = new MockApiAccessor();
-      ICalendarInteractor calendarInteractor = new CalendarInteractor(apiAccessor);
-      IList<CalendarEvent> calendarEvents = calendarInteractor.RetrieveEvents();
+      ICalendarManager calendarManager = new CalendarManager(apiAccessor);
+
+      IList<CalendarEvent> calendarEvents = calendarManager.RetrieveEvents();
+
       var firstEvent = calendarEvents.FirstOrDefault();
       AssertFirstEventIsValid(firstEvent);
       Assert.AreEqual(4, calendarEvents.Count);
@@ -29,15 +31,51 @@ namespace CpInterview.Tests
       Assert.AreEqual("10/13/2021 2:00:00 PM", calendarEvent.StartDate.ToString());
       Assert.AreEqual("10/13/2021 3:30:00 PM", calendarEvent.EndDate.ToString());
     }
+
+    [TestMethod]
+    public void CanAddEvent()
+    {
+      IApiAccessor apiAccessor = new MockApiAccessor();
+      ICalendarManager calendarManager = new CalendarManager(apiAccessor);
+      CalendarEvent calendarEvent = new CalendarEvent()
+      {
+        Title = "My Mock Name",
+        Description = "My Mock Description",
+        StartDate = new System.DateTime(2021, 10, 13, 16, 30, 0, System.DateTimeKind.Utc),
+        EndDate = new System.DateTime(2021, 10, 13, 16, 30, 0, System.DateTimeKind.Utc)
+      };
+
+      calendarManager.AddEvent(calendarEvent);
+
+      MockApiAccessor spy = apiAccessor as MockApiAccessor;
+      AssertSpyIsEqualToParameter(calendarEvent, spy);
+      Assert.AreEqual(1, spy.countCallsToAddEvent);
+    }
+
+    private void AssertSpyIsEqualToParameter(CalendarEvent calendarEvent, MockApiAccessor spy)
+    {
+      Assert.AreEqual(calendarEvent.Title, spy.spyCalendarEventWriteEntity.Title);
+      Assert.AreEqual(calendarEvent.Description, spy.spyCalendarEventWriteEntity.Description);
+      Assert.AreEqual(calendarEvent.StartDate, spy.spyCalendarEventWriteEntity.StartDate);
+      Assert.AreEqual(calendarEvent.EndDate, spy.spyCalendarEventWriteEntity.EndDate);
+    }
   }
 
   internal class MockApiAccessor : IApiAccessor
   {
-    public IList<CalendarEventEntity> RetrieveCalendarEvents()
+    public CalendarEventWriteEntity spyCalendarEventWriteEntity { get; set; }
+    public int countCallsToAddEvent { get; set; }
+    public void AddEvent(CalendarEventWriteEntity calendarEventToWrite)
     {
-      return new List<CalendarEventEntity>()
+      spyCalendarEventWriteEntity = calendarEventToWrite;
+      countCallsToAddEvent++;
+    }
+
+    public IList<CalendarEventReadEntity> RetrieveCalendarEvents()
+    {
+      return new List<CalendarEventReadEntity>()
       {
-        new CalendarEventEntity()
+        new CalendarEventReadEntity()
         {
           Id = "guid1",
           Title = "My Interview with CivicPlus",
@@ -45,7 +83,7 @@ namespace CpInterview.Tests
           StartDate = new System.DateTime(2021, 10, 13, 19, 0, 0, System.DateTimeKind.Utc),
           EndDate = new System.DateTime(2021, 10, 13, 20, 30, 0, System.DateTimeKind.Utc),
         },
-        new CalendarEventEntity()
+        new CalendarEventReadEntity()
         {
           Id = "guid2",
           Title = "My Interview with CivicPlus",
@@ -53,7 +91,7 @@ namespace CpInterview.Tests
           StartDate = new System.DateTime(2021, 10, 13, 19, 0, 0, System.DateTimeKind.Utc),
           EndDate = new System.DateTime(2021, 10, 13, 20, 30, 0, System.DateTimeKind.Utc),
         },
-        new CalendarEventEntity()
+        new CalendarEventReadEntity()
         {
           Id = "guid3",
           Title = "My Interview with CivicPlus",
@@ -61,7 +99,7 @@ namespace CpInterview.Tests
           StartDate = new System.DateTime(2021, 10, 13, 19, 0, 0, System.DateTimeKind.Utc),
           EndDate = new System.DateTime(2021, 10, 13, 20, 30, 0, System.DateTimeKind.Utc),
         },
-        new CalendarEventEntity()
+        new CalendarEventReadEntity()
         {
           Id = "guid4",
           Title = "My Interview with CivicPlus",

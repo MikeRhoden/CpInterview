@@ -14,7 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CpInterview\CpInterview.csproj" />
+    <ProjectReference Include="..\CpInterview.Console\CpInterview.Console.csproj" />
+    <ProjectReference Include="..\CpInterview.ClassLib\CpInterview.ClassLib.csproj" />
   </ItemGroup>
 
 </Project>

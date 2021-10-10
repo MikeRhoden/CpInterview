@@ -1,6 +1,6 @@
 using System;
 
-namespace CpInterview.Interactors
+namespace CpInterview.Models
 {
   public class CalendarEvent
   {
