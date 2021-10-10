@@ -1,4 +1,5 @@
 using CpInterview.DataEntities;
+using CpInterview.Manager;
 using CpInterview.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 namespace CpInterview.Tests
 {
   [TestClass]
-  public class CalendarInteractorTests
+  public class CalendarManagerTests
   {
     [TestMethod]
     public void CanRetrieveEvents()
@@ -41,23 +42,23 @@ namespace CpInterview.Tests
       {
         Title = "My Mock Name",
         Description = "My Mock Description",
-        StartDate = new System.DateTime(2021, 10, 13, 16, 30, 0, System.DateTimeKind.Utc),
-        EndDate = new System.DateTime(2021, 10, 13, 16, 30, 0, System.DateTimeKind.Utc)
+        StartDate = new System.DateTime(2021, 10, 13, 16, 30, 0, System.DateTimeKind.Local),
+        EndDate = new System.DateTime(2021, 10, 13, 16, 30, 0, System.DateTimeKind.Local)
       };
 
       calendarManager.AddEvent(calendarEvent);
 
       MockApiAccessor spy = apiAccessor as MockApiAccessor;
-      AssertSpyIsEqualToParameter(calendarEvent, spy);
+      AssertMappedEventForAccessorIsValid(calendarEvent, spy);
       Assert.AreEqual(1, spy.countCallsToAddEvent);
     }
 
-    private void AssertSpyIsEqualToParameter(CalendarEvent calendarEvent, MockApiAccessor spy)
+    private void AssertMappedEventForAccessorIsValid(CalendarEvent calendarEvent, MockApiAccessor spy)
     {
       Assert.AreEqual(calendarEvent.Title, spy.spyCalendarEventWriteEntity.Title);
       Assert.AreEqual(calendarEvent.Description, spy.spyCalendarEventWriteEntity.Description);
-      Assert.AreEqual(calendarEvent.StartDate, spy.spyCalendarEventWriteEntity.StartDate);
-      Assert.AreEqual(calendarEvent.EndDate, spy.spyCalendarEventWriteEntity.EndDate);
+      Assert.AreEqual(calendarEvent.StartDate.ToUniversalTime(), spy.spyCalendarEventWriteEntity.StartDate);
+      Assert.AreEqual(calendarEvent.EndDate.ToUniversalTime(), spy.spyCalendarEventWriteEntity.EndDate);
     }
   }
 
