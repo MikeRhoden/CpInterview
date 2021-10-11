@@ -53,28 +53,37 @@ namespace CpInterview.Console
 
     private static void AddEvent()
     {
-      System.Console.WriteLine("");
-      System.Console.WriteLine("Please enter Title, Description, Start, and End for your Event ...");
-      System.Console.Write("Title: ");
-      var title = System.Console.ReadLine();
-      System.Console.Write("Description: ");
-      var description = System.Console.ReadLine();
-      System.Console.Write("Start (mm/dd/yy hh:mm AM): ");
-      System.DateTime start = System.DateTime.Parse(System.Console.ReadLine());
-      System.Console.Write("End (mm/dd/yy hh:mm AM): ");
-      System.DateTime end = System.DateTime.Parse(System.Console.ReadLine());
-
-      //TODO Check for valid input on dates and length of title and description
-      var calendarEvent = new CalendarEvent()
+      try
       {
-        Title = title,
-        Description = description,
-        StartDate = start,
-        EndDate = end
-      };
+        System.Console.WriteLine("");
+        System.Console.WriteLine("Please enter Title, Description, Start, and End for your Event ...");
+        System.Console.Write("Title: ");
+        var title = System.Console.ReadLine();
+        System.Console.Write("Description: ");
+        var description = System.Console.ReadLine();
+        System.Console.Write("Start (mm/dd/yy hh:mm AM): ");
+        System.DateTime start = System.DateTime.Parse(System.Console.ReadLine());
+        System.Console.Write("End (mm/dd/yy hh:mm AM): ");
+        System.DateTime end = System.DateTime.Parse(System.Console.ReadLine());
 
-      var calendarManager = new CalendarManager(new ApiAccessor());
-      calendarManager.AddEvent(calendarEvent);
+        //TODO Check for valid input on dates and length of title and description
+        var calendarEvent = new CalendarEvent()
+        {
+          Title = title,
+          Description = description,
+          StartDate = start,
+          EndDate = end
+        };
+
+        var calendarManager = new CalendarManager(new ApiAccessor());
+        calendarManager.AddEvent(calendarEvent);
+      }
+      catch (Exception e)
+      {
+        System.Console.ForegroundColor = ConsoleColor.Red;
+        System.Console.WriteLine($"Failed to add event. {e.Message}");
+        System.Console.ResetColor();
+      }
     }
 
     private static void Intro()
