@@ -1,4 +1,5 @@
 ﻿using System;
+using ConsoleTables;
 using CpInterview.ApiAccess;
 using CpInterview.Manager;
 using CpInterview.Models;
@@ -103,13 +104,24 @@ namespace CpInterview
 
     private static void ListCalendarEvents()
     {
-      //TODO Format output in a console table
       System.Console.WriteLine("");
 
       var calendarManager = new CalendarManager(new ApiAccessor());
       var events = calendarManager.RetrieveEvents();
-      foreach (var ev in events)
-        System.Console.WriteLine($"{ev.Title} - {ev.Description} - {ev.StartDate} - {ev.EndDate}");
+
+      if (events.Count == 0)
+      {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("There are no events.");
+        Console.ResetColor();
+      }
+      else
+      {
+        var table = new ConsoleTable("Title", "Description", "Start Time", "End Time");
+        foreach (var ev in events)
+          table.AddRow(ev.Title, ev.Description, ev.StartDate, ev.EndDate);
+        table.Write();
+      }
     }
   }
 }

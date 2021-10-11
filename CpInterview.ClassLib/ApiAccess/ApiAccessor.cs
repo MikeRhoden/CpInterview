@@ -18,7 +18,6 @@ namespace CpInterview.ApiAccess
     //TODO put this in app config
     private const string EVENT_ENDPOINT = "https://interview.cpdv.ninja/5122899e-8cd5-4b63-bd10-2ac6b7d08f93/api/Events";
 
-
     public ApiAccessor()
     {
       //TODO if token is expired create a new instance of the singleton CpToken
@@ -32,15 +31,15 @@ namespace CpInterview.ApiAccess
       {
         StringContent postContent = new StringContent(JsonConvert.SerializeObject(calendarEventToWrite), Encoding.UTF8, "application/json-patch+json");
         var response = httpClient.PostAsync(EVENT_ENDPOINT, postContent).Result;
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
-          Console.WriteLine("Success");
+          throw new Exception(response.ReasonPhrase);
         }
         else
         {
-          var content = response.Content.ReadAsStringAsync().Result;
-          Console.WriteLine(content);
-          //TODO return error to client
+          var r = response.Content.ReadAsStringAsync().Result;
+          Console.WriteLine($"{r}");
+
         }
       }
     }
