@@ -33,25 +33,6 @@ namespace CpInterview
       Console.WriteLine("Goodbye. Thanks for visiting!.");
     }
 
-    private static void Prompt1()
-    {
-      var quit = false;
-      while (!quit)
-      {
-        Intro();
-        var readKey = System.Console.ReadKey();
-        var k = readKey.Key;
-        if (k == ConsoleKey.L)
-          ListCalendarEvents();
-        if (k == ConsoleKey.A)
-          AddEvent();
-        if (k == ConsoleKey.Q)
-          quit = true;
-      }
-      Console.WriteLine("");
-      Console.WriteLine("Goodbye. Thanks for visiting!");
-    }
-
     private static void AddEvent()
     {
       try
