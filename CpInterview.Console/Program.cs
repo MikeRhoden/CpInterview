@@ -3,7 +3,7 @@ using CpInterview.ApiAccess;
 using CpInterview.Manager;
 using CpInterview.Models;
 
-namespace CpInterview.Console
+namespace CpInterview
 {
   class Program
   {
@@ -28,8 +28,8 @@ namespace CpInterview.Console
         if (input.ToLower() == "q")
           quit = true;
       }
-      System.Console.WriteLine("");
-      System.Console.WriteLine("Goodbye. Thanks for visiting!.");
+      Console.WriteLine("");
+      Console.WriteLine("Goodbye. Thanks for visiting!.");
     }
 
     private static void Prompt1()
@@ -47,26 +47,28 @@ namespace CpInterview.Console
         if (k == ConsoleKey.Q)
           quit = true;
       }
-      System.Console.WriteLine("");
-      System.Console.WriteLine("Goodbye. Thanks for visiting!.");
+      Console.WriteLine("");
+      Console.WriteLine("Goodbye. Thanks for visiting!");
     }
 
     private static void AddEvent()
     {
       try
       {
-        System.Console.WriteLine("");
-        System.Console.WriteLine("Please enter Title, Description, Start, and End for your Event ...");
-        System.Console.Write("Title: ");
+        Console.WriteLine("");
+        Console.WriteLine("Please enter Title, Description, Start, and End for your Event ...");
+        Console.Write("Title: ");
         var title = System.Console.ReadLine();
-        System.Console.Write("Description: ");
+        Console.Write("Description: ");
         var description = System.Console.ReadLine();
-        System.Console.Write("Start (mm/dd/yy hh:mm AM): ");
+        Console.Write("Start (mm/dd/yy hh:mm AM): ");
         System.DateTime start = System.DateTime.Parse(System.Console.ReadLine());
-        System.Console.Write("End (mm/dd/yy hh:mm AM): ");
+        Console.Write("End (mm/dd/yy hh:mm AM): ");
         System.DateTime end = System.DateTime.Parse(System.Console.ReadLine());
 
-        //TODO Check for valid input on dates and length of title and description
+        if (end <= start)
+          throw new Exception("The end time of your event must be after it starts.");
+
         var calendarEvent = new CalendarEvent()
         {
           Title = title,
@@ -77,12 +79,15 @@ namespace CpInterview.Console
 
         var calendarManager = new CalendarManager(new ApiAccessor());
         calendarManager.AddEvent(calendarEvent);
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Event Added!");
+        Console.ResetColor();
       }
       catch (Exception e)
       {
-        System.Console.ForegroundColor = ConsoleColor.Red;
-        System.Console.WriteLine($"Failed to add event. {e.Message}");
-        System.Console.ResetColor();
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"Failed to add event. {e.Message}");
+        Console.ResetColor();
       }
     }
 
