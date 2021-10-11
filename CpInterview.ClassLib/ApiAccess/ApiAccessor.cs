@@ -35,12 +35,6 @@ namespace CpInterview.ApiAccess
         {
           throw new Exception(response.ReasonPhrase);
         }
-        else
-        {
-          var r = response.Content.ReadAsStringAsync().Result;
-          Console.WriteLine($"{r}");
-
-        }
       }
     }
 
@@ -82,8 +76,4 @@ namespace CpInterview.ApiAccess
       public IList<CalendarEventReadEntity> items { get; set; }
     }
   }
-
-
-
-
 }
